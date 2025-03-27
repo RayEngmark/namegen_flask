@@ -8,11 +8,15 @@
   <style>
     :root {
       --bg-dark: #0d1117;
-      --card-bg: #161b22cc;
+      --bg-light: #f4f4f4;
+      --card-bg-dark: #161b22cc;
+      --card-bg-light: #ffffff;
       --primary: #58a6ff;
       --accent: #c778dd;
-      --text: #e6edf3;
-      --border: #30363d;
+      --text-dark: #e6edf3;
+      --text-light: #1e1e1e;
+      --border-dark: #30363d;
+      --border-light: #cccccc;
       --blur: blur(14px);
     }
 
@@ -20,17 +24,26 @@
       box-sizing: border-box;
     }
 
+    body[data-theme="dark"] {
+      background: radial-gradient(ellipse at top left, #1f2937 0%, #0d1117 100%);
+      color: var(--text-dark);
+    }
+
+    body[data-theme="light"] {
+      background: linear-gradient(to bottom, #ffffff, #f4f4f4);
+      color: var(--text-light);
+    }
+
     body {
       margin: 0;
       padding: 2rem;
       font-family: 'Orbitron', sans-serif;
-      background: radial-gradient(ellipse at top left, #1f2937 0%, #0d1117 100%);
-      color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background 0.5s, color 0.5s;
     }
 
     .logo {
@@ -42,25 +55,45 @@
       text-transform: uppercase;
     }
 
+    .toggle-theme {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--primary);
+      color: #0d1117;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
     .input-group {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: var(--card-bg-dark);
+      border: 1px solid var(--border-dark);
       border-radius: 16px;
       backdrop-filter: var(--blur);
       padding: 2rem;
       max-width: 700px;
       width: 100%;
       box-shadow: 0 0 30px rgba(0,0,0,0.3);
+      transition: background 0.5s, border 0.5s;
+    }
+
+    body[data-theme="light"] .input-group {
+      background: var(--card-bg-light);
+      border: 1px solid var(--border-light);
     }
 
     input[type="text"] {
       width: 100%;
       padding: 1rem 1.2rem;
       font-size: 1rem;
-      background: #0d1117;
-      border: 1px solid var(--border);
+      background: transparent;
+      border: 1px solid var(--border-dark);
       border-radius: 12px;
-      color: var(--text);
+      color: inherit;
       margin-bottom: 1.2rem;
     }
 
@@ -73,9 +106,9 @@
 
     .tag {
       background: #21262d;
-      color: var(--text);
+      color: var(--text-dark);
       padding: 0.6rem 1.2rem;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-dark);
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -100,13 +133,9 @@
       transition: 0.2s ease;
     }
 
-    button:hover {
-      background: #4093ff;
-    }
-
     .result-box {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: var(--card-bg-dark);
+      border: 1px solid var(--border-dark);
       backdrop-filter: var(--blur);
       padding: 2.5rem;
       border-radius: 20px;
@@ -115,6 +144,12 @@
       width: 100%;
       box-shadow: 0 0 40px rgba(0,0,0,0.4);
       text-align: center;
+      transition: background 0.5s, border 0.5s;
+    }
+
+    body[data-theme="light"] .result-box {
+      background: var(--card-bg-light);
+      border: 1px solid var(--border-light);
     }
 
     .name-grid {
@@ -131,32 +166,40 @@
       font-weight: bold;
       color: var(--primary);
       border-radius: 16px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-dark);
       transition: 0.3s ease;
+      min-height: 3.5rem;
     }
 
-    .name-box:hover {
-      transform: scale(1.05);
-      border-color: var(--accent);
+    .shimmer {
+      background: linear-gradient(90deg, #2a2f36 25%, #3a3f48 50%, #2a2f36 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      color: transparent;
     }
 
-    .ad-space {
-      margin-top: 4rem;
-      width: 100%;
-      max-width: 728px;
-      height: 90px;
-      border: 1px dashed var(--border);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      color: var(--gray);
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .typing {
+      border-right: 2px solid var(--accent);
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 2s steps(30) 1 normal both;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
     }
   </style>
 </head>
-<body>
-  <div class="logo">Name Generator</div>
+<body data-theme="dark">
+  <button class="toggle-theme" onclick="toggleTheme()">Toggle Theme</button>
+
+  <div class="logo typing">Name Generator</div>
 
   <div class="input-group">
     <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
@@ -193,8 +236,26 @@
       });
     });
 
+    function toggleTheme() {
+      const current = document.body.getAttribute("data-theme");
+      document.body.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    }
+
     async function generateName() {
       const vibe = document.getElementById("vibe").value;
+      const grid = document.getElementById("nameGrid");
+      const resultBox = document.getElementById("resultBox");
+
+      // Show shimmer boxes
+      resultBox.style.display = "block";
+      grid.innerHTML = "";
+      for (let i = 0; i < 4; i++) {
+        const shimmer = document.createElement("div");
+        shimmer.className = "name-box shimmer";
+        shimmer.textContent = "Generating...";
+        grid.appendChild(shimmer);
+      }
+
       const res = await fetch("/generate-name", {
         method: "POST",
         headers: {
@@ -206,16 +267,13 @@
       const data = await res.json();
       const names = data.names || [];
 
-      const grid = document.getElementById("nameGrid");
       grid.innerHTML = "";
       names.forEach((name) => {
         const div = document.createElement("div");
-        div.className = "name-box";
+        div.className = "name-box typing";
         div.textContent = name;
         grid.appendChild(div);
       });
-
-      document.getElementById("resultBox").style.display = "block";
     }
   </script>
 </body>
