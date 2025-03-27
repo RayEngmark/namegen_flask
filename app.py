@@ -34,27 +34,31 @@ You are an AI specialized in suggesting names that match the user's intent. Your
 
 - If no specific type is requested, generate diverse and fitting names using the provided tags and vibe. If no input is given at all, provide a variety of random names from different cultures and categories.
 
-Always ensure your suggestions match the user's tone and purpose. Avoid reusing the same names repeatedly. Deliver names that feel intentional, not random.
+Always ensure your suggestions match the user's tone and purpose. Avoid reusing the same names repeatedly. Deliver names that feel intentional, not random. 
+
+Return exactly 4 fitting names only, one per line, with no explanation or intro. Do not number them. Just output the names cleanly.
+
 """
 
     print("Prompt used:", prompt)
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4",  # or "gpt-3.5-turbo" to save tokens
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": base},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.9,
-            max_tokens=30
+            max_tokens=50
         )
-        result = response.choices[0].message.content.strip()
-        print("AI responded with:", result)
+
+        raw_output = response.choices[0].message.content.strip()
+        names = [name for name in raw_output.split("\n") if name]
+        print("AI responded with:", names)
+        result = names
+
     except Exception as e:
-        result = f"(Error: {str(e)})"
+        result = [f"Error: {str(e)}"]
 
-    return jsonify({"name": result})
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    return jsonify({"names": result})
