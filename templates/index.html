@@ -4,16 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Name Idea Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #0d1117;
-      --card-bg: #161b22cc;
-      --primary: #58a6ff;
-      --accent: #c778dd;
-      --text: #e6edf3;
-      --border: #30363d;
-      --blur: blur(14px);
+      --bg-light: #f5f7fa;
+      --glass-bg: rgba(255, 255, 255, 0.3);
+      --glass-blur: blur(20px);
+      --text: #222;
+      --highlight: #7f5af0;
+      --muted: #777;
+      --btn: #6246ea;
+      --white: #fff;
     }
 
     * {
@@ -22,236 +23,146 @@
 
     body {
       margin: 0;
-      padding: 2rem;
-      font-family: 'Orbitron', sans-serif;
-      background: radial-gradient(ellipse at top left, #1f2937 0%, #0d1117 100%);
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+      background: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=1500&q=80') center/cover no-repeat;
       color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
-    .logo {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 3rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .input-group {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      backdrop-filter: var(--blur);
+    .top-bar {
+      margin-top: 4rem;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
       padding: 2rem;
-      max-width: 700px;
-      width: 100%;
-      box-shadow: 0 0 30px rgba(0,0,0,0.3);
+      border-radius: 24px;
+      max-width: 900px;
+      width: 90%;
+      text-align: center;
     }
 
-    input[type="text"] {
+    .top-bar input {
       width: 100%;
-      padding: 1rem 1.2rem;
+      padding: 1rem;
       font-size: 1rem;
-      background: transparent;
-      border: 1px solid var(--border);
+      border: none;
       border-radius: 12px;
-      color: inherit;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
     }
 
     .tags {
       display: flex;
-      gap: 0.6rem;
       flex-wrap: wrap;
-      margin-bottom: 1.5rem;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-bottom: 1.2rem;
     }
 
     .tag {
-      background: #21262d;
-      color: var(--text);
-      padding: 0.6rem 1.2rem;
-      border: 1px solid var(--border);
-      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.6rem 1rem;
+      border-radius: 50px;
       cursor: pointer;
+      font-weight: 600;
       transition: all 0.2s ease;
-      font-size: 0.9rem;
     }
 
     .tag.selected {
-      background: var(--accent);
-      color: black;
+      background: var(--highlight);
+      color: white;
     }
 
-    button {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1.1rem;
-      font-weight: bold;
+    .generate-btn {
+      padding: 1rem 2rem;
+      background: var(--btn);
+      color: white;
       border: none;
       border-radius: 12px;
-      background: var(--primary);
-      color: #0d1117;
+      font-size: 1.1rem;
+      font-weight: bold;
       cursor: pointer;
-      transition: 0.2s ease;
+      transition: background 0.3s ease;
     }
 
-    .result-box {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      backdrop-filter: var(--blur);
-      padding: 2.5rem;
-      border-radius: 20px;
-      margin-top: 3rem;
-      max-width: 700px;
-      width: 100%;
-      box-shadow: 0 0 40px rgba(0,0,0,0.4);
-      text-align: center;
+    .generate-btn:hover {
+      background: #4e38d3;
     }
 
     .name-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-top: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem auto;
+      width: 90%;
+      max-width: 800px;
     }
 
     .name-box {
-      background: #0d1117;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
       padding: 2rem;
-      font-size: 1.6rem;
-      font-weight: bold;
-      color: var(--primary);
       border-radius: 16px;
-      border: 1px solid var(--border);
-      transition: 0.3s ease;
-      min-height: 3.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
       cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
 
     .shimmer {
-      background: linear-gradient(90deg, #2a2f36 25%, #3a3f48 50%, #2a2f36 75%);
+      background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%);
       background-size: 200% 100%;
       animation: shimmer 1.2s infinite;
       color: transparent;
     }
 
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    .info-card {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      max-width: 400px;
-      width: 90%;
-      text-align: left;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      animation: fadeIn 0.3s ease;
-    }
-
-    .info-card h2 {
-      margin-top: 0;
-      color: var(--primary);
-    }
-
-    .info-card p {
-      margin: 0.4rem 0;
-    }
-
-    .close-btn {
-      margin-top: 1rem;
-      background: var(--accent);
-      color: black;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
   </style>
 </head>
 <body>
-  <div class="logo">Name Generator</div>
-
-  <div class="input-group">
-    <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
+  <div class="top-bar">
+    <input type="text" id="vibe" placeholder="What vibe are you going for? (Optional)" />
     <div class="tags">
       <div class="tag">Baby Boy</div>
       <div class="tag">Baby Girl</div>
       <div class="tag">Startup</div>
       <div class="tag">Pet</div>
-      <div class="tag">Fantasy/Game character</div>
+      <div class="tag">Fantasy</div>
       <div class="tag">Gamertag</div>
-      <div class="tag">Asian</div>
-      <div class="tag">Toy</div>
-      <div class="tag">Polish</div>
-      <div class="tag">French</div>
-      <div class="tag">German</div>
-      <div class="tag">European</div>
       <div class="tag">Nordic</div>
-      <div class="tag">American</div>
-      <div class="tag">South America</div>
-      <div class="tag">North America</div>
+      <div class="tag">European</div>
+      <div class="tag">Toy</div>
     </div>
-    <button onclick="generateName()">Generate Name</button>
+    <button class="generate-btn" onclick="generateName()">✨ Show Me Some Names</button>
   </div>
 
-  <div class="result-box" id="resultBox" style="display: none">
-    <div class="name-grid" id="nameGrid"></div>
-  </div>
-
-  <div id="overlay" class="overlay" style="display: none">
-    <div class="info-card">
-      <h2 id="infoName"></h2>
-      <p><strong>Meaning:</strong> <span id="infoMeaning">Mythical goddess of love and war</span></p>
-      <p><strong>Origin:</strong> <span id="infoOrigin">Old Norse</span></p>
-      <button class="close-btn" onclick="closeOverlay()">Close</button>
-    </div>
-  </div>
+  <div class="name-grid" id="nameGrid"></div>
 
   <script>
     const tagEls = document.querySelectorAll(".tag");
     let selectedTags = [];
 
-    tagEls.forEach((tagEl) => {
-      tagEl.addEventListener("click", () => {
-        tagEl.classList.toggle("selected");
-        const value = tagEl.textContent;
-        if (selectedTags.includes(value)) {
-          selectedTags = selectedTags.filter((t) => t !== value);
-        } else {
-          selectedTags.push(value);
-        }
+    tagEls.forEach(tag => {
+      tag.addEventListener("click", () => {
+        tag.classList.toggle("selected");
+        const val = tag.textContent;
+        selectedTags.includes(val)
+          ? selectedTags = selectedTags.filter(t => t !== val)
+          : selectedTags.push(val);
       });
     });
 
     async function generateName() {
       const vibe = document.getElementById("vibe").value;
       const grid = document.getElementById("nameGrid");
-      const resultBox = document.getElementById("resultBox");
-
-      resultBox.style.display = "block";
       grid.innerHTML = "";
+
       for (let i = 0; i < 4; i++) {
         const shimmer = document.createElement("div");
         shimmer.className = "name-box shimmer";
@@ -262,31 +173,19 @@
       const res = await fetch("/generate-name", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tags: selectedTags, vibe }),
+        body: JSON.stringify({ tags: selectedTags, vibe })
       });
 
       const data = await res.json();
       const names = data.names || [];
 
       grid.innerHTML = "";
-      names.forEach((name) => {
-        const div = document.createElement("div");
-        div.className = "name-box";
-        div.textContent = name;
-        div.onclick = () => showInfo(name);
-        grid.appendChild(div);
+      names.forEach(name => {
+        const card = document.createElement("div");
+        card.className = "name-box";
+        card.textContent = name;
+        grid.appendChild(card);
       });
-    }
-
-    function showInfo(name) {
-      document.getElementById("infoName").textContent = name;
-      document.getElementById("infoMeaning").textContent = "This is placeholder meaning.";
-      document.getElementById("infoOrigin").textContent = "Placeholder origin.";
-      document.getElementById("overlay").style.display = "flex";
-    }
-
-    function closeOverlay() {
-      document.getElementById("overlay").style.display = "none";
     }
   </script>
 </body>
