@@ -54,7 +54,9 @@ Return exactly 4 fitting names only, one per line, with no explanation or intro.
         )
 
         raw_output = response.choices[0].message.content.strip()
-        names = [name for name in raw_output.split("\n") if name]
+        import re
+        names = [re.sub(r'^[-•\\d\\s\\.]+', '', name).strip() for name in raw_output.split("\n") if name.strip()]
+
         print("AI responded with:", names)
         result = names
 
