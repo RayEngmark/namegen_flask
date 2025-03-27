@@ -1,31 +1,234 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Name Generator</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Name Idea Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #6366f1;
+      --gray-bg: #f9fafb;
+      --gray-light: #e5e7eb;
+      --gray-text: #6b7280;
+      --text-main: #111827;
+      --radius: 16px;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--gray-bg);
+      margin: 0;
+      padding: 3rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-main);
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      font-size: 3rem;
+    }
+
+    .input-group {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    input[type="text"] {
+      padding: 1rem 1.2rem;
+      font-size: 1.1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-light);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background-color: #eef2ff;
+      color: var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .tag:hover {
+      background-color: #dcdffd;
+    }
+
+    .tag.selected {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    button {
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background-color: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #4f46e5;
+    }
+
+    .result-box {
+      background-color: white;
+      box-shadow: var(--shadow);
+      padding: 2.5rem;
+      border-radius: var(--radius);
+      margin-top: 3rem;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 600;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .name-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .name-box {
+      padding: 1.4rem;
+      background: #f3f4f6;
+      border-radius: var(--radius);
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease;
+    }
+
+    .name-box:hover {
+      transform: scale(1.05);
+    }
+
+    .ad-space {
+      margin-top: 4rem;
+      width: 100%;
+      max-width: 728px;
+      height: 90px;
+      background-color: var(--gray-light);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-text);
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-  <main>
-    <h1>🧠 Name Idea Generator</h1>
+  <div class="logo">
+    <span>🫠</span> Name Idea Generator
+  </div>
 
+  <div class="input-group">
     <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
-
-    <div class="tag-buttons">
-      <button class="tag">Startup</button>
-      <button class="tag">Nordic</button>
-      <button class="tag">Pet</button>
-      <button class="tag">Fantasy</button>
+    <div class="tags">
+      <div class="tag">Startup</div>
+      <div class="tag">Nordic</div>
+      <div class="tag">Pet</div>
+      <div class="tag">Fantasy</div>
     </div>
+    <button onclick="generateName()">Generate Name</button>
+  </div>
 
-    <button id="generateBtn">Generate Name</button>
+  <div class="result-box" id="resultBox" style="display: none">
+    <div class="name-grid" id="nameGrid"></div>
+  </div>
 
-    <div class="result hidden" id="resultBox">
-      <p>🔤 Here's your name:</p>
-      <h2 id="nameOutput"></h2>
-    </div>
+  <div class="ad-space">
+    [ Your Ad Could Be Here ]
+  </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-  </main>
+  <script>
+    const tagEls = document.querySelectorAll(".tag");
+    let selectedTags = [];
+
+    tagEls.forEach((tagEl) => {
+      tagEl.addEventListener("click", () => {
+        tagEl.classList.toggle("selected");
+        const value = tagEl.textContent;
+        if (selectedTags.includes(value)) {
+          selectedTags = selectedTags.filter((t) => t !== value);
+        } else {
+          selectedTags.push(value);
+        }
+      });
+    });
+
+    async function generateName() {
+      const vibe = document.getElementById("vibe").value;
+      const res = await fetch("/generate-name", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tags: selectedTags, vibe }),
+      });
+
+      const data = await res.json();
+      const names = data.names || [];
+
+      const grid = document.getElementById("nameGrid");
+      grid.innerHTML = "";
+      names.forEach((name) => {
+        const div = document.createElement("div");
+        div.className = "name-box";
+        div.textContent = name;
+        grid.appendChild(div);
+      });
+
+      document.getElementById("resultBox").style.display = "block";
+    }
+  </script>
 </body>
 </html>
