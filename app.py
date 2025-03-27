@@ -20,24 +20,56 @@ def generate_name():
     tags = data.get("tags", [])
     vibe = data.get("vibe", "")
 
+    tag_descriptions = {
+    "Baby Boy": "realistic and culturally appropriate names for baby boys",
+    "Baby Girl": "realistic and culturally appropriate names for baby girls",
+    "Startup": "modern, brandable, short and catchy names for businesses or products",
+    "Pet": "cute and fun names for animals like dogs, cats, or exotic pets",
+    "Fantasy/Game character": "mythical, fantasy, or game-style names with flair",
+    "Gamertag": "original and catchy gamer usernames, sometimes with edgy or creative spelling",
+    "Asian": "authentic or inspired names from Asian cultures",
+    "Toy": "playful and marketable names suitable for toys or kids’ products",
+    "Polish": "realistic Polish names respecting Polish culture and language",
+    "French": "elegant or traditional names from French culture",
+    "German": "strong or classic names from German-speaking regions",
+    "European": "names that are common across Europe, or have European flair",
+    "Nordic": "names inspired by Scandinavian mythology and culture",
+    "American": "popular or classic names from the United States",
+    "South America": "names reflecting South American language and culture",
+    "North America": "names common in the US and Canada"
+}
+
+
     # Build prompt
-    base = "You are a creative name generator."
-    context = f"Tags: {', '.join(tags)}." if tags else ""
+    base = "You are a name generator."
+    tag_contexts = [tag_descriptions.get(tag, tag) for tag in tags]
+    context = f"Tags: {', '.join(tag_contexts)}." if tag_contexts else ""
+
     user_input = f"Vibe: {vibe}." if vibe else ""
     prompt = f"""{base} {context} {user_input}
 
-You are an AI specialized in suggesting names that match the user's intent. Your behavior should dynamically adapt to the type of name requested:
+You are a highly specialized AI with one purpose: generating names that perfectly match the user's intent. Your suggestions are creative, relevant, and never random or repetitive. You understand tone, cultural context, current trends, and niche vibes.
 
-- If the user asks for **baby names**, suggest realistic, culturally relevant, and usable names. Avoid overly creative or fictional styles — focus on actual candidates parents might consider.
+Your output must follow these strict rules:
+- Return **exactly 4 names**, one per line.
+- **Do not** include numbers, dashes, dots, or special characters.
+- **No explanations, intros, or formatting** — just the 4 names.
+- **No repetition**, even across multiple generations with the same prompt.
+- Every name must feel **fresh, intentional, and purpose-built**.
 
-- If the user asks for a **gamertag**, analyze popular gamertag trends and suggest original, catchy tags based on the user's input or vibe. You may include creative spelling or mashups if appropriate, but keep them usable.
+Behavior rules:
+- For human names, give realistic, culturally appropriate, and usable first names. Avoid fictional or gimmicky styles. NO double names
+- For **gamertags**, follow modern trends: originality, memorability, clean fusion of words, creative spelling if needed — but always readable and cool.
+- If **no type is specified**, infer the tone from tags or vibe. If no context is given, return a diverse, balanced set of unique names.
+- If tags or vibes are provided (e.g., “mystical,” “futuristic,” “Nordic,” “urban”), fully integrate their essence into the names — not just as inspiration, but as the **core identity** of each name.
 
-- If no specific type is requested, generate diverse and fitting names using the provided tags and vibe. If no input is given at all, provide a variety of random names from different cultures and categories.
+You must internally track previously used names to avoid duplicates. Prioritize freshness and novelty while staying aligned with the user’s intent.
 
-Always ensure your suggestions match the user's tone and purpose. Avoid reusing the same names repeatedly. Deliver names that feel intentional, not random. 
-
-Return exactly 4 fitting names only, one per line, with no explanation or intro. Do not number them. Just output the names cleanly.
-
+Output format:
+<Name1>  
+<Name2>  
+<Name3>  
+<Name4>
 """
 
     print("Prompt used:", prompt)
@@ -55,7 +87,8 @@ Return exactly 4 fitting names only, one per line, with no explanation or intro.
 
         raw_output = response.choices[0].message.content.strip()
         import re
-        names = [re.sub(r'^[-•\\d\\s\\.]+', '', name).strip() for name in raw_output.split("\n") if name.strip()]
+        names = [re.sub(r'^[-•\d\s.]+', '', name).strip() for name in raw_output.split("\n") if name.strip()]
+
 
         print("AI responded with:", names)
         result = names
