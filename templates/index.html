@@ -22,73 +22,58 @@
     }
 
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-      background: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?fit=crop&w=1500&q=80') center/cover no-repeat;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        font-family: 'Outfit', sans-serif;
+        background: url('https://images.unsplash.com/photo-1618221514565-0c172026c3fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+        background-attachment: fixed;
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
     }
 
-    .top-bar {
-      margin-top: 4rem;
+
+    .middle-button {
+      margin-top: 6rem;
       background: var(--glass-bg);
       backdrop-filter: var(--glass-blur);
-      padding: 2rem;
-      border-radius: 24px;
-      max-width: 900px;
-      width: 90%;
+      border-radius: 16px;
+      padding: 2rem 3rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       text-align: center;
     }
 
-    .top-bar input {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-    }
-
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: center;
-      margin-bottom: 1.2rem;
-    }
-
-    .tag {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 0.6rem 1rem;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-
-    .tag.selected {
-      background: var(--highlight);
-      color: white;
-    }
-
-    .generate-btn {
-      padding: 1rem 2rem;
-      background: var(--btn);
-      color: white;
-      border: none;
-      border-radius: 12px;
+    .middle-button button {
+      padding: 1.2rem 2.5rem;
       font-size: 1.1rem;
-      font-weight: bold;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      background-color: var(--btn);
+      color: white;
       cursor: pointer;
       transition: background 0.3s ease;
     }
 
-    .generate-btn:hover {
-      background: #4e38d3;
+    .middle-button button:hover {
+      background-color: #4e38d3;
+    }
+
+    .controls {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .controls select, .controls input {
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
     }
 
     .name-grid {
@@ -126,44 +111,36 @@
   </style>
 </head>
 <body>
-  <div class="top-bar">
-    <input type="text" id="vibe" placeholder="What vibe are you going for? (Optional)" />
-    <div class="tags">
-      <div class="tag">Baby Boy</div>
-      <div class="tag">Baby Girl</div>
-      <div class="tag">Startup</div>
-      <div class="tag">Pet</div>
-      <div class="tag">Fantasy</div>
-      <div class="tag">Gamertag</div>
-      <div class="tag">Nordic</div>
-      <div class="tag">European</div>
-      <div class="tag">Toy</div>
+  <div class="middle-button">
+    <button onclick="generateName()">🎲 Surprise me with names!</button>
+    <div class="controls">
+      <select id="tagSelect" multiple size="4">
+        <option>Baby Boy</option>
+        <option>Baby Girl</option>
+        <option>Startup</option>
+        <option>Pet</option>
+        <option>Fantasy</option>
+        <option>Gamertag</option>
+        <option>Nordic</option>
+        <option>European</option>
+        <option>Toy</option>
+      </select>
+      <input type="number" id="count" placeholder="Number of names (1-6)" min="1" max="6" />
+      <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
     </div>
-    <button class="generate-btn" onclick="generateName()">✨ Show Me Some Names</button>
   </div>
 
   <div class="name-grid" id="nameGrid"></div>
 
   <script>
-    const tagEls = document.querySelectorAll(".tag");
-    let selectedTags = [];
-
-    tagEls.forEach(tag => {
-      tag.addEventListener("click", () => {
-        tag.classList.toggle("selected");
-        const val = tag.textContent;
-        selectedTags.includes(val)
-          ? selectedTags = selectedTags.filter(t => t !== val)
-          : selectedTags.push(val);
-      });
-    });
-
     async function generateName() {
       const vibe = document.getElementById("vibe").value;
+      const count = parseInt(document.getElementById("count").value) || 4;
+      const selectedTags = Array.from(document.getElementById("tagSelect").selectedOptions).map(o => o.value);
       const grid = document.getElementById("nameGrid");
       grid.innerHTML = "";
 
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < count; i++) {
         const shimmer = document.createElement("div");
         shimmer.className = "name-box shimmer";
         shimmer.textContent = "Generating...";
@@ -177,13 +154,13 @@
       });
 
       const data = await res.json();
-      const names = data.names || [];
+      const names = Array.isArray(data.names) ? data.names : [];
 
       grid.innerHTML = "";
-      names.forEach(name => {
+      names.forEach(item => {
         const card = document.createElement("div");
         card.className = "name-box";
-        card.textContent = name;
+        card.textContent = item.name || item;
         grid.appendChild(card);
       });
     }
