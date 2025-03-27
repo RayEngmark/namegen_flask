@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Name Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>🧠 Name Idea Generator</h1>
+
+    <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
+
+    <div class="tag-buttons">
+      <button class="tag">Startup</button>
+      <button class="tag">Nordic</button>
+      <button class="tag">Pet</button>
+      <button class="tag">Fantasy</button>
+    </div>
+
+    <button id="generateBtn">Generate Name</button>
+
+    <div class="result hidden" id="resultBox">
+      <p>🔤 Here's your name:</p>
+      <h2 id="nameOutput"></h2>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </main>
+</body>
+</html>

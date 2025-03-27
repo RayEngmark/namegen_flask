@@ -1,0 +1,40 @@
+body {
+    font-family: sans-serif;
+    background: #f3f4f6;
+    padding: 2rem;
+    max-width: 600px;
+    margin: auto;
+  }
+  h1 { text-align: center; }
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  .tag-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  button.tag {
+    background: #e0e7ff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  button.tag.active {
+    background: #4338ca;
+    color: white;
+  }
+  .result {
+    margin-top: 2rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .hidden { display: none; }
+  
