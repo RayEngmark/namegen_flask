@@ -1,167 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Name Idea Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-light: #f5f7fa;
-      --glass-bg: rgba(255, 255, 255, 0.3);
-      --glass-blur: blur(20px);
-      --text: #222;
-      --highlight: #7f5af0;
-      --muted: #777;
-      --btn: #6246ea;
-      --white: #fff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-      background: url('../static/images/background.png') center/cover no-repeat;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .middle-button {
-      margin-top: 6rem;
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
-      border-radius: 16px;
-      padding: 2rem 3rem;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-      text-align: center;
-    }
-
-    .middle-button button {
-      padding: 1.2rem 2.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      background-color: var(--btn);
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .middle-button button:hover {
-      background-color: #4e38d3;
-    }
-
-    .controls {
-      margin-top: 2rem;
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .controls select, .controls input {
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      border: none;
-      font-size: 1rem;
-    }
-
-    .name-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1.5rem;
-      margin: 3rem auto;
-      width: 90%;
-      max-width: 800px;
-    }
-
-    .name-box {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
-      padding: 2rem;
-      border-radius: 16px;
-      font-size: 1.5rem;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-
-    .shimmer {
-      background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.2s infinite;
-      color: transparent;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-  </style>
-</head>
-<body>
-  <div class="middle-button">
-    <button onclick="generateName()">🎲 Surprise me with names!</button>
-    <div class="controls">
-      <select id="tagSelect" multiple size="4">
-        <option>Baby Boy</option>
-        <option>Baby Girl</option>
-        <option>Startup</option>
-        <option>Pet</option>
-        <option>Fantasy</option>
-        <option>Gamertag</option>
-        <option>Nordic</option>
-        <option>European</option>
-        <option>Toy</option>
-      </select>
-      <input type="number" id="count" placeholder="Number of names (1-6)" min="1" max="6" />
-      <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
-    </div>
+{% extends "layout.html" %}
+{% block title %}Name Idea Generator{% endblock %}
+{% block content %}
+<div class="middle-button">
+  <button onclick="generateName()">🎲 Surprise me with names!</button>
+  <div class="controls">
+    <select id="tagSelect" multiple size="4">
+      <option>Baby Boy</option>
+      <option>Baby Girl</option>
+      <option>Startup</option>
+      <option>Pet</option>
+      <option>Fantasy</option>
+      <option>Gamertag</option>
+      <option>Asian</option>
+      <option>Toy</option>
+      <option>Polish</option>
+      <option>French</option>
+      <option>German</option>
+      <option>European</option>
+      <option>Nordic</option>
+      <option>American</option>
+      <option>South America</option>
+      <option>North America</option>
+    </select>
+    <input type="number" id="count" placeholder="Number of names (1-6)" min="1" max="6" />
+    <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
   </div>
-
-  <div class="name-grid" id="nameGrid"></div>
-
-  <script>
-    async function generateName() {
-      const vibe = document.getElementById("vibe").value;
-      const count = parseInt(document.getElementById("count").value) || 4;
-      const selectedTags = Array.from(document.getElementById("tagSelect").selectedOptions).map(o => o.value);
-      const grid = document.getElementById("nameGrid");
-      grid.innerHTML = "";
-
-      for (let i = 0; i < count; i++) {
-        const shimmer = document.createElement("div");
-        shimmer.className = "name-box shimmer";
-        shimmer.textContent = "Generating...";
-        grid.appendChild(shimmer);
-      }
-
-      const res = await fetch("/generate-name", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tags: selectedTags, vibe })
-      });
-
-      const data = await res.json();
-      const names = Array.isArray(data.names) ? data.names : [];
-
-      grid.innerHTML = "";
-      names.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "name-box";
-        card.textContent = item.name || item;
-        grid.appendChild(card);
-      });
-    }
-  </script>
-</body>
-</html>
+</div>
+<div class="name-grid" id="nameGrid"></div>
+{% endblock %}
