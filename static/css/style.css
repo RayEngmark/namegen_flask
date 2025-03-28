@@ -1,102 +1,112 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: url("../images/background.png") no-repeat center center fixed;
+  font-family: 'Manrope', sans-serif;
+  background: url('/static/images/background.png') no-repeat center center fixed;
   background-size: cover;
-  color: #fff;
-  text-align: center;
+  color: white;
   overflow-x: hidden;
 }
 
-.naming-forest {
+.landing-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  padding: 4rem 1rem;
-  backdrop-filter: brightness(1.05) blur(2px);
+  padding-top: 8vh;
 }
 
-.forest-heading {
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: #f0f0f0;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-  margin-bottom: 0.5rem;
+.landing-box {
+  backdrop-filter: blur(8px) brightness(1.05);
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  text-align: center;
+  animation: fadeIn 1.5s ease-out forwards;
+  opacity: 0;
 }
 
-.tag-selector select {
-  padding: 0.6rem;
-  border: none;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
+.headline {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
   color: #fff;
-  font-size: 1rem;
-  width: 240px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
-.inputs-row {
+.controls {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
-.inputs-row input {
-  padding: 0.6rem 1rem;
+.controls select,
+.controls input,
+.controls button {
+  padding: 0.8rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 1rem;
-  width: 200px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  backdrop-filter: blur(4px);
+  transition: background 0.3s ease;
 }
 
-.inputs-row input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+.controls input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.glow-button {
-  background: rgba(102, 51, 255, 0.9);
-  color: #fff;
-  padding: 0.8rem 1.6rem;
-  border: none;
-  border-radius: 16px;
-  font-size: 1.1rem;
+.controls select:hover,
+.controls input:hover,
+.controls button:hover {
+  background: rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 15px rgba(102, 51, 255, 0.4);
 }
 
-.glow-button:hover {
-  background: rgba(102, 51, 255, 1);
-  box-shadow: 0 0 25px rgba(102, 51, 255, 0.6);
+.generate-button {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  background-color: #4f46e5;
+  transition: background-color 0.3s ease;
+}
+
+.generate-button:hover {
+  background-color: #6366f1;
 }
 
 .name-grid {
+  margin-top: 3rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.2rem;
-  padding: 2rem 1rem;
+  gap: 2rem;
 }
 
 .name-grid div {
-  font-size: 1.5rem;
-  padding: 0.8rem 1.4rem;
-  border-radius: 14px;
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  backdrop-filter: blur(3px);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
-  transition: transform 0.2s ease;
-  cursor: pointer;
+  font-size: 1.4rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.8s ease-out;
+  color: white;
 }
 
-.name-grid div:hover {
-  transform: scale(1.05);
-  background-color: rgba(255, 255, 255, 0.15);
+/* Animations */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

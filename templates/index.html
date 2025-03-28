@@ -1,30 +1,34 @@
 {% extends "layout.html" %}
 {% block title %}Name Idea Generator{% endblock %}
+
 {% block content %}
-<div class="middle-button">
-  <button onclick="generateName()">🎲 Surprise me with names!</button>
-  <div class="controls">
-    <select id="tagSelect" multiple size="4">
-      <option>Baby Boy</option>
-      <option>Baby Girl</option>
-      <option>Startup</option>
-      <option>Pet</option>
-      <option>Fantasy</option>
-      <option>Gamertag</option>
-      <option>Asian</option>
-      <option>Toy</option>
-      <option>Polish</option>
-      <option>French</option>
-      <option>German</option>
-      <option>European</option>
-      <option>Nordic</option>
-      <option>American</option>
-      <option>South America</option>
-      <option>North America</option>
-    </select>
-    <input type="number" id="count" placeholder="Number of names (1-6)" min="1" max="6" />
-    <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
+<div class="landing-container">
+  <div class="landing-box">
+    <h1 class="headline">🎲 Surprise me with names!</h1>
+    <div class="controls">
+      <select id="tagSelect" multiple size="4">
+        <option>Baby Boy</option>
+        <option>Baby Girl</option>
+        <option>Startup</option>
+        <option>Pet</option>
+        <option>Fantasy/Game character</option>
+        <option>Gamertag</option>
+        <option>Asian</option>
+        <option>Toy</option>
+        <option>Polish</option>
+        <option>French</option>
+        <option>German</option>
+        <option>European</option>
+        <option>Nordic</option>
+        <option>American</option>
+        <option>South America</option>
+        <option>North America</option>
+      </select>
+      <input type="number" id="count" placeholder="Number of names (1-6)" min="1" max="6" />
+      <input type="text" id="vibe" placeholder="Describe the vibe (optional)" />
+      <button class="generate-button" onclick="generateName()">Generate</button>
+    </div>
   </div>
+  <div class="name-grid" id="nameGrid"></div>
 </div>
-<div class="name-grid" id="nameGrid"></div>
 {% endblock %}
