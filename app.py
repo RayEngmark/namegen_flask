@@ -21,24 +21,23 @@ def generate_name():
     vibe = data.get("vibe", "")
 
     tag_descriptions = {
-    "Baby Boy": "realistic and culturally appropriate names for baby boys",
-    "Baby Girl": "realistic and culturally appropriate names for baby girls",
-    "Startup": "modern, brandable, short and catchy names for businesses or products",
-    "Pet": "cute and fun names for animals like dogs, cats, or exotic pets",
-    "Fantasy/Game character": "mythical, fantasy, or game-style names with flair",
-    "Gamertag": "original and catchy gamer usernames, sometimes with edgy or creative spelling",
-    "Asian": "authentic or inspired names from Asian cultures",
-    "Toy": "playful and marketable names suitable for toys or kids’ products",
-    "Polish": "realistic Polish names respecting Polish culture and language",
-    "French": "elegant or traditional names from French culture",
-    "German": "strong or classic names from German-speaking regions",
-    "European": "names that are common across Europe, or have European flair",
-    "Nordic": "names inspired by Scandinavian mythology and culture",
-    "American": "popular or classic names from the United States",
-    "South America": "names reflecting South American language and culture",
-    "North America": "names common in the US and Canada"
-}
-
+        "Baby Boy": "realistic and culturally appropriate names for baby boys",
+        "Baby Girl": "realistic and culturally appropriate names for baby girls",
+        "Startup": "modern, brandable, short and catchy names for businesses or products",
+        "Pet": "cute and fun names for animals like dogs, cats, or exotic pets",
+        "Fantasy/Game character": "mythical, fantasy, or game-style names with flair",
+        "Gamertag": "original and catchy gamer usernames, sometimes with edgy or creative spelling",
+        "Asian": "authentic or inspired names from Asian cultures",
+        "Toy": "playful and marketable names suitable for toys or kids’ products",
+        "Polish": "realistic Polish names respecting Polish culture and language",
+        "French": "elegant or traditional names from French culture",
+        "German": "strong or classic names from German-speaking regions",
+        "European": "names that are common across Europe, or have European flair",
+        "Nordic": "names inspired by Scandinavian mythology and culture",
+        "American": "popular or classic names from the United States",
+        "South America": "names reflecting South American language and culture",
+        "North America": "names common in the US and Canada"
+    }
 
     # Build prompt
     base = "You are a name generator."
@@ -72,8 +71,6 @@ Output format:
 <Name4>
 """
 
-    print("Prompt used:", prompt)
-
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -87,10 +84,8 @@ Output format:
 
         raw_output = response.choices[0].message.content.strip()
         import re
-        names = [re.sub(r'^[-•\d\s.]+', '', name).strip() for name in raw_output.split("\n") if name.strip()]
+        names = [re.sub(r'^[-•\\d\\s\\.]+', '', name).strip() for name in raw_output.split("\n") if name.strip()]
 
-
-        print("AI responded with:", names)
         result = names
 
     except Exception as e:
@@ -98,6 +93,7 @@ Output format:
 
     return jsonify({"names": result})
 
+# Fix for Render and production environment
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    port = int(os.environ.get("PORT", 5000))  # Port dynamically retrieved from environment variable
+    app.run(host="0.0.0.0", port=port)  # Ensure the app binds to all network interfaces for Render
